@@ -6,7 +6,9 @@ If Siyuan Notes' document tree is sorted by document name, it lacks the freedom 
 
 ## Features
 
-When the document tree sorting mode is set to custom sorting, the plugin will add a sorting button to the right-click menu of parent documents and notebooks in the document tree for sorting. Currently, only sequential sorting is supported.
+When the document tree sorting mode is set to custom sorting, the plugin will add a sorting button to the right-click menu of parent documents and notebooks in the document tree for sorting. Currently, only natural sorting is supported.
+
+![](https://fastly.jsdelivr.net/gh/Achuan-2/PicBed/assets/自定义排序2-2024-11-28.gif)
 
 ## Powered by Love
 
