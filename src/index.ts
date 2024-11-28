@@ -1,12 +1,11 @@
 import {
     Plugin,
-    fetchPost,
     IModel,
 } from "siyuan";
 import "@/index.scss";
-import { putFile, getHPathByID, getDoc, listDocTree, getFile, getNotebookConf } from "./api";
+import { putFile, getHPathByID, getDoc, listDocTree, getFile } from "./api";
 
-export default class PluginSample extends Plugin {
+export default class DoctreeAutosort extends Plugin {
 
     customTab: () => IModel;
 
@@ -35,6 +34,9 @@ export default class PluginSample extends Plugin {
                 } else {
                     // 如果是父文档，寻找最近的ul node
                     const topElement = this.hasTopClosestByTag(element, "UL");
+                    if (!topElement) {
+                        return;
+                    }
                     sortMode = topElement.getAttribute("data-sortmode");
                 }
                 if (sortMode == 6 || (window.siyuan.config.fileTree.sort === 6 && sortMode == 15)) {
