@@ -4,7 +4,7 @@ import {
     IModel,
 } from "siyuan";
 import "@/index.scss";
-import { putFile, getHPathByID, getDoc, listDocTree, getFile } from "./api";
+import { putFile, getHPathByID, getDoc, listDocTree, getFile, getNotebookConf } from "./api";
 
 export default class PluginSample extends Plugin {
 
@@ -15,7 +15,7 @@ export default class PluginSample extends Plugin {
         this.eventBus.on("open-menu-doctree", this.addSortButton.bind(this));
     }
 
-    private addSortButton = ({ detail }: any) => {
+    private async addSortButton ({ detail }: any)  {
         // 判断是否是自定义排序模式，不是则不添加按钮
         if (window.siyuan.config.fileTree.sort != 6) {
             return false;
@@ -25,22 +25,67 @@ export default class PluginSample extends Plugin {
             const element = elements[0];
             const isParentDoc = element.getAttribute("data-count") > 0;
             const isNotebook = element.getAttribute("data-type") === "navigation-root";
-            const id = isNotebook ? element.parentNode.getAttribute("data-url") : element.getAttribute("data-node-id");
+            let sortMode;
+
+
+
             if (isParentDoc || isNotebook) {
-                detail.menu.addItem({
-                    icon: "iconSort",
-                    label: this.i18n.sortMenuAsc,
-                    click: () => this.sortDocuments(id, isNotebook, true)
-                });
-                detail.menu.addItem({
-                    icon: "iconSort",
-                    label: this.i18n.sortMenuDesc,
-                    click: () => this.sortDocuments(id, isNotebook, false)
-                });
+                if (isNotebook) {
+                    sortMode = element.parentNode.getAttribute("data-sortmode");
+                } else {
+                    // 如果是父文档，寻找最近的ul node
+                    const topElement = this.hasTopClosestByTag(element, "UL");
+                    sortMode = topElement.getAttribute("data-sortmode");
+                }
+                if (sortMode == 6 || (window.siyuan.config.fileTree.sort === 6 && sortMode == 15)) {
+                    const id = isNotebook ? element.parentNode.getAttribute("data-url") : element.getAttribute("data-node-id");
+                    detail.menu.addItem({
+                        icon: "iconSort",
+                        label: this.i18n.sortMenuAsc,
+                        click: () => this.sortDocuments(id, isNotebook, true)
+                    });
+                    detail.menu.addItem({
+                        icon: "iconSort",
+                        label: this.i18n.sortMenuDesc,
+                        click: () => this.sortDocuments(id, isNotebook, false)
+                    });
+                }
+
             }
         }
     }
-
+    private hasTopClosestByTag = (element: Node, nodeName: string) => {
+        let closest = this.hasClosestByTag(element, nodeName);
+        let parentClosest: boolean | HTMLElement = false;
+        let findTop = false;
+        while (closest && !closest.classList.contains("protyle-wysiwyg") && !findTop) {
+            parentClosest = this.hasClosestByTag(closest.parentElement, nodeName);
+            if (parentClosest) {
+                closest = parentClosest;
+            } else {
+                findTop = true;
+            }
+        }
+        return closest || false;
+    };
+    private hasClosestByTag = (element: Node, nodeName: string) => {
+        if (!element || element.nodeType === 9) {
+            return false;
+        }
+        if (element.nodeType === 3) {
+            element = element.parentElement;
+        }
+        let e = element as HTMLElement;
+        let isClosest = false;
+        while (e && !isClosest && !e.classList.contains("b3-typography")) {
+            if (e.nodeName.indexOf(nodeName) === 0) {
+                isClosest = true;
+            } else {
+                e = e.parentElement;
+            }
+        }
+        return isClosest && e;
+    };
     private async sortDocuments(id: string, isNotebook: boolean, ascending: boolean) {
 
         // 保存文件的辅助函数
