@@ -26,7 +26,6 @@ export default class PluginSample extends Plugin {
             const isParentDoc = element.getAttribute("data-count") > 0;
             const isNotebook = element.getAttribute("data-type") === "navigation-root";
             const id = isNotebook ? element.parentNode.getAttribute("data-url") : element.getAttribute("data-node-id");
-            // console.log(element);
             if (isParentDoc || isNotebook) {
                 detail.menu.addItem({
                     icon: "iconSort",
@@ -66,7 +65,6 @@ export default class PluginSample extends Plugin {
         }
         // 获取子文档id
         const childDocIds = (await listDocTree(boxID,listDocTreeQuery.path)).tree;
-        // console.log(childDocIds)
         // 获取所有文档名称并排序
         const idNamePairs = await Promise.all(childDocIds.map(async (doc: any) => {
             const name = await getHPathByID(doc.id);
@@ -74,7 +72,6 @@ export default class PluginSample extends Plugin {
         }));
         const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
         idNamePairs.sort((a, b) => ascending ? collator.compare(a.name, b.name) : collator.compare(b.name, a.name));
-        console.log(idNamePairs)
         // 创建排序结果对象
         const sortedResult = {};
         idNamePairs.forEach((pair, index) => {
@@ -82,7 +79,6 @@ export default class PluginSample extends Plugin {
         });
         // 获取现有的sort.json文件
         const sortJson = await getFile(`/data/${boxID}/.siyuan/sort.json`);
-        console.log(sortJson)
 
 
         // 更新排序值
