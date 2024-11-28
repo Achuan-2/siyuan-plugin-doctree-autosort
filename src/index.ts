@@ -30,14 +30,19 @@ export default class PluginSample extends Plugin {
             if (isParentDoc || isNotebook) {
                 detail.menu.addItem({
                     icon: "iconSort",
-                    label: this.i18n.sortMenu,
-                    click: () => this.sortDocuments(id, isNotebook)
+                    label: this.i18n.sortMenuAsc,
+                    click: () => this.sortDocuments(id, isNotebook, true)
+                });
+                detail.menu.addItem({
+                    icon: "iconSort",
+                    label: this.i18n.sortMenuDesc,
+                    click: () => this.sortDocuments(id, isNotebook, false)
                 });
             }
         }
     }
 
-    private async sortDocuments(id: string, isNotebook: boolean) {
+    private async sortDocuments(id: string, isNotebook: boolean, ascending: boolean) {
 
         // 保存文件的辅助函数
         let listDocTreeQuery;
@@ -67,7 +72,8 @@ export default class PluginSample extends Plugin {
             const name = await getHPathByID(doc.id);
             return { id: doc.id, name: name };
         }));
-        idNamePairs.sort((a, b) => a.name.localeCompare(b.name));
+        const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+        idNamePairs.sort((a, b) => ascending ? collator.compare(a.name, b.name) : collator.compare(b.name, a.name));
         console.log(idNamePairs)
         // 创建排序结果对象
         const sortedResult = {};

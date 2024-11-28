@@ -1,3 +1,5 @@
 {
-    "sortMenu":"Custom Sort Automation"
+    "sortMenu": "Custom Sort Automation",
+    "sortMenuAsc": "Sort in Ascending Order",
+    "sortMenuDesc": "Sort in Descending Order"
 }

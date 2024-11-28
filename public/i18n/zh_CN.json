@@ -1,3 +1,5 @@
 {
-    "sortMenu": "自定义排序自动化"
+    "sortMenu": "自定义排序自动化",
+    "sortMenuAsc": "自然升序",
+    "sortMenuDesc": "自然降序"
 }
