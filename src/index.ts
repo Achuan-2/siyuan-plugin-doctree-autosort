@@ -81,9 +81,7 @@ export default class PluginSample extends Plugin {
 
         // 更新排序值
         for (let id in sortedResult) {
-            if (sortJson.hasOwnProperty(id)) {
                 sortJson[id] = sortedResult[id];
-            }
         }
 
         // 保存更新后的sort.json文件
