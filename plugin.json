@@ -21,11 +21,11 @@
   ],
   "displayName": {
     "en_US": "DocTree Custom Sort Automation",
-    "zh_CN": "文档树自定义排序自动化"
+    "zh_CN": "文档树自定义排序增强"
   },
   "description": {
     "en_US": "Custom Sort + Automation Sort = Ideal DocTree Sort",
-    "zh_CN": "自定义排序+自动化排序=理想文档树排序"
+    "zh_CN": "对自定义排序添加自动化排序功能"
   },
   "readme": {
     "en_US": "README.md",
